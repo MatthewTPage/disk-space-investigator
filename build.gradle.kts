@@ -8,7 +8,8 @@ plugins {
 }
 
 group = "page.matthewt.diskspaceinvestigator"
-version = "1.0.0"
+val appVersion: String by project
+version = appVersion
 
 kotlin {
     jvmToolchain(21)
@@ -60,10 +61,10 @@ compose.desktop {
         mainClass = "page.matthewt.diskspaceinvestigator.MainKt"
 
         nativeDistributions {
-            targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
+            targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb, TargetFormat.Rpm)
 
             packageName = "Disk Space Investigator"
-            packageVersion = "1.0.0"
+            packageVersion = appVersion
             description = "Analyze and manage disk space usage"
             vendor = "Disk Space Investigator"
 
