@@ -11,6 +11,7 @@ import androidx.compose.ui.window.Dialog
 import com.konyaco.fluent.component.Text
 import com.konyaco.fluent.component.Button
 import com.konyaco.fluent.FluentTheme
+import page.matthewt.diskspaceinvestigator.BuildConfig
 import page.matthewt.diskspaceinvestigator.ui.theme.AppColors
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.OutlinedTextField
@@ -118,6 +119,14 @@ fun App(viewModel: AppViewModel) {
                     modifier = Modifier.align(Alignment.BottomCenter),
                 )
             }
+
+            // Version footer
+            Text(
+                "v${BuildConfig.VERSION}",
+                color = AppColors.textDisabled,
+                style = FluentTheme.typography.caption,
+                modifier = Modifier.align(Alignment.BottomEnd).padding(8.dp),
+            )
         }
     }
 }
