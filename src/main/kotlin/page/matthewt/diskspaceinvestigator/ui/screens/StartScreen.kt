@@ -1,7 +1,9 @@
 package page.matthewt.diskspaceinvestigator.ui.screens
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.*
@@ -18,6 +20,7 @@ import page.matthewt.diskspaceinvestigator.ui.theme.AppColors
 import page.matthewt.diskspaceinvestigator.session.SessionInfo
 import page.matthewt.diskspaceinvestigator.ui.components.SessionListItem
 import page.matthewt.diskspaceinvestigator.ui.components.SshConnectDialog
+import page.matthewt.diskspaceinvestigator.update.UpdateInfo
 import java.io.File
 import javax.swing.JFileChooser
 
@@ -29,6 +32,10 @@ fun StartScreen(
     onSshScan: (host: String, user: String, path: String, port: Int) -> Unit,
     onLoadSession: (File, Long) -> Unit,
     onDeleteSession: (File) -> Unit,
+    updateAvailable: UpdateInfo? = null,
+    updateProgress: String? = null,
+    onInstallUpdate: () -> Unit = {},
+    onDismissUpdate: () -> Unit = {},
 ) {
     var showSshDialog by remember { mutableStateOf(false) }
 
@@ -67,6 +74,35 @@ fun StartScreen(
                 error,
                 color = AppColors.error,
             )
+        }
+
+        // Update banner
+        if (updateAvailable != null) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(AppColors.backgroundSecondary, RoundedCornerShape(8.dp))
+                    .padding(12.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
+            ) {
+                if (updateProgress != null) {
+                    com.konyaco.fluent.component.ProgressRing(modifier = Modifier.size(16.dp))
+                    Text(updateProgress, color = AppColors.textPrimary, modifier = Modifier.weight(1f))
+                } else {
+                    Text(
+                        "Update available: v${updateAvailable.version}",
+                        color = AppColors.textPrimary,
+                        modifier = Modifier.weight(1f),
+                    )
+                    Button(onClick = onInstallUpdate) {
+                        Text("Update")
+                    }
+                    Button(onClick = onDismissUpdate) {
+                        Text("Dismiss")
+                    }
+                }
+            }
         }
 
         // Action buttons

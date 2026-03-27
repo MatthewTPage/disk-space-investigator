@@ -45,6 +45,10 @@ fun App(viewModel: AppViewModel) {
                     },
                     onLoadSession = { file, duration -> viewModel.loadSession(file, duration) },
                     onDeleteSession = { viewModel.deleteSessionFile(it) },
+                    updateAvailable = currentState.updateAvailable,
+                    updateProgress = currentState.updateProgress,
+                    onInstallUpdate = { viewModel.installUpdate() },
+                    onDismissUpdate = { viewModel.dismissUpdate() },
                 )
 
                 is AppState.LoadingSession -> LoadingSessionScreen(

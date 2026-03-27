@@ -10,6 +10,7 @@ import page.matthewt.diskspaceinvestigator.scanner.SshScanner
 import page.matthewt.diskspaceinvestigator.session.SessionManager
 import page.matthewt.diskspaceinvestigator.session.SessionStore
 import page.matthewt.diskspaceinvestigator.ssh.SshConnectionManager
+import page.matthewt.diskspaceinvestigator.update.UpdateChecker
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import java.awt.Desktop
@@ -38,11 +39,64 @@ class AppViewModel(
 
     init {
         loadStartScreen()
+        checkForUpdates()
     }
 
     fun loadStartScreen() {
         val sessions = sessionManager.listSessions()
         _state.value = AppState.Start(sessions = sessions)
+    }
+
+    private fun checkForUpdates() {
+        scope.launch {
+            try {
+                val update = withContext(Dispatchers.IO) { UpdateChecker.check() }
+                if (update != null) {
+                    val s = _state.value
+                    if (s is AppState.Start) {
+                        _state.value = s.copy(updateAvailable = update)
+                    }
+                }
+            } catch (_: Exception) {
+                // Silently ignore update check failures
+            }
+        }
+    }
+
+    fun installUpdate() {
+        val s = _state.value
+        if (s !is AppState.Start || s.updateAvailable == null) return
+        val update = s.updateAvailable
+
+        _state.value = s.copy(updateProgress = "Starting download...")
+
+        scope.launch {
+            try {
+                withContext(Dispatchers.IO) {
+                    UpdateChecker.downloadAndInstall(update) { progress ->
+                        val current = _state.value
+                        if (current is AppState.Start) {
+                            _state.value = current.copy(updateProgress = progress)
+                        }
+                    }
+                }
+                // Exit after launching installer
+                kotlin.system.exitProcess(0)
+            } catch (e: Exception) {
+                _error.value = "Update failed: ${e.message}"
+                val current = _state.value
+                if (current is AppState.Start) {
+                    _state.value = current.copy(updateProgress = null)
+                }
+            }
+        }
+    }
+
+    fun dismissUpdate() {
+        val s = _state.value
+        if (s is AppState.Start) {
+            _state.value = s.copy(updateAvailable = null)
+        }
     }
 
     fun startLocalScan(path: String) {

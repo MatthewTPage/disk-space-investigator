@@ -2,11 +2,14 @@ package page.matthewt.diskspaceinvestigator.viewmodel
 
 import page.matthewt.diskspaceinvestigator.model.*
 import page.matthewt.diskspaceinvestigator.session.SessionInfo
+import page.matthewt.diskspaceinvestigator.update.UpdateInfo
 
 sealed class AppState {
     data class Start(
         val sessions: List<SessionInfo> = emptyList(),
         val error: String? = null,
+        val updateAvailable: UpdateInfo? = null,
+        val updateProgress: String? = null,
     ) : AppState()
 
     data class Scanning(
