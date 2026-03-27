@@ -75,8 +75,8 @@ compose.desktop {
 
             macOS {
                 bundleID = "page.matthewt.diskspaceinvestigator"
-                // macOS DMG requires MAJOR > 0, so offset by 1
-                dmgPackageVersion = appVersion.split(".").let {
+                // macOS requires MAJOR > 0 for packaging, so offset by 1
+                packageVersion = appVersion.split(".").let {
                     "${it[0].toInt() + 1}.${it.drop(1).joinToString(".")}"
                 }
             }
