@@ -115,6 +115,8 @@ compose.desktop {
                 packageName = "disk-space-investigator"
                 iconFile.set(project.file("src/main/resources/icon.png"))
             }
+
+            includeAllModules = true
         }
 
         buildTypes.release {

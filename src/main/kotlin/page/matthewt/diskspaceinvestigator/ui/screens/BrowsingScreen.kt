@@ -129,7 +129,7 @@ fun BrowsingScreen(
                 }
                 else -> {
                     Button(onClick = onSave) {
-                        Text("Save (~${SizeDisplay.format(estimatedSessionSize)})")
+                        Text("Save Session (~${SizeDisplay.format(estimatedSessionSize)})")
                     }
                 }
             }
