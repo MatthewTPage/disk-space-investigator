@@ -48,16 +48,16 @@ jobs:
       matrix:
         include:
           - os: windows-latest
-            task: packageMsi
+            task: packageReleaseMsi
             artifact-glob: "build/compose/binaries/main-release/msi/*.msi"
           - os: macos-latest
-            task: packageDmg
+            task: packageReleaseDmg
             artifact-glob: "build/compose/binaries/main-release/dmg/*.dmg"
           - os: ubuntu-latest
-            task: packageDeb
+            task: packageReleaseDeb
             artifact-glob: "build/compose/binaries/main-release/deb/*.deb"
           - os: ubuntu-latest
-            task: packageRpm
+            task: packageReleaseRpm
             artifact-glob: "build/compose/binaries/main-release/rpm/*.rpm"
 
     runs-on: ${{ matrix.os }}
