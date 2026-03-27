@@ -10,7 +10,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.konyaco.fluent.component.Button
 import com.konyaco.fluent.component.Text
-import com.konyaco.fluent.FluentTheme
+import page.matthewt.diskspaceinvestigator.ui.theme.AppColors
 import page.matthewt.diskspaceinvestigator.model.FileNode
 
 @Composable
@@ -20,6 +20,7 @@ fun FileRow(
     onOpen: () -> Unit,
     onDelete: () -> Unit,
     parentTotalSize: Long,
+    isDeleting: Boolean = false,
 ) {
     val sizeText = SizeDisplay.format(node.totalSize)
     val percentage = if (parentTotalSize > 0) {
@@ -53,9 +54,9 @@ fun FileRow(
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
             color = if (node.isAccessDenied) {
-                FluentTheme.colors.text.text.disabled
+                AppColors.textDisabled
             } else {
-                FluentTheme.colors.text.text.primary
+                AppColors.textPrimary
             },
         )
 
@@ -64,18 +65,24 @@ fun FileRow(
             text = sizeText,
             modifier = Modifier.width(80.dp),
             fontWeight = FontWeight.Medium,
-            color = FluentTheme.colors.text.text.primary,
+            color = AppColors.textPrimary,
         )
 
         // Percentage
         Text(
             text = "%.1f%%".format(percentage),
             modifier = Modifier.width(60.dp),
-            color = FluentTheme.colors.text.text.secondary,
+            color = AppColors.textSecondary,
         )
 
         // Actions
-        if (!node.isAccessDenied) {
+        if (isDeleting) {
+            Text(
+                "Deleting...",
+                color = AppColors.textSecondary,
+                modifier = Modifier.width(140.dp),
+            )
+        } else if (!node.isAccessDenied) {
             Button(
                 onClick = onOpen,
                 modifier = Modifier.height(28.dp),

@@ -13,7 +13,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.konyaco.fluent.component.Button
 import com.konyaco.fluent.component.Text
-import com.konyaco.fluent.FluentTheme
+import page.matthewt.diskspaceinvestigator.ui.theme.AppColors
 import page.matthewt.diskspaceinvestigator.model.FileNode
 import page.matthewt.diskspaceinvestigator.model.SortMode
 import page.matthewt.diskspaceinvestigator.ui.components.DeleteConfirmDialog
@@ -41,6 +41,8 @@ fun BrowsingScreen(
     loadedFromSession: Boolean = false,
     sessionSaved: Boolean = false,
     saving: Boolean = false,
+    saveProgress: String? = null,
+    deletingPaths: Set<String> = emptySet(),
 ) {
     var deleteTarget by remember { mutableStateOf<FileNode?>(null) }
     val listState = rememberLazyListState()
@@ -76,15 +78,15 @@ fun BrowsingScreen(
                     if (index > 0) {
                         Text(
                             " > ",
-                            color = FluentTheme.colors.text.text.secondary,
+                            color = AppColors.textSecondary,
                         )
                     }
                     Text(
                         node.name,
                         color = if (index == pathStack.size - 1) {
-                            FluentTheme.colors.text.text.primary
+                            AppColors.textPrimary
                         } else {
-                            FluentTheme.colors.text.text.secondary
+                            AppColors.textSecondary
                         },
                         fontWeight = if (index == pathStack.size - 1) FontWeight.Bold else FontWeight.Normal,
                         modifier = if (index < pathStack.size - 1) {
@@ -108,16 +110,22 @@ fun BrowsingScreen(
                 loadedFromSession || sessionSaved -> {
                     Text(
                         if (loadedFromSession) "Loaded from session" else "Session saved",
-                        color = FluentTheme.colors.text.text.secondary,
+                        color = AppColors.textSecondary,
                         modifier = androidx.compose.ui.Modifier.padding(horizontal = 8.dp),
                     )
                 }
                 saving -> {
-                    Text(
-                        "Saving...",
-                        color = FluentTheme.colors.text.text.secondary,
-                        modifier = androidx.compose.ui.Modifier.padding(horizontal = 8.dp),
-                    )
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        modifier = Modifier.padding(horizontal = 8.dp),
+                    ) {
+                        com.konyaco.fluent.component.ProgressRing(modifier = Modifier.size(16.dp))
+                        Text(
+                            saveProgress ?: "Saving...",
+                            color = AppColors.textSecondary,
+                        )
+                    }
                 }
                 else -> {
                     Button(onClick = onSave) {
@@ -138,20 +146,20 @@ fun BrowsingScreen(
         ) {
             Text(
                 "Current: ${SizeDisplay.format(currentNode.totalSize)}",
-                color = FluentTheme.colors.text.text.secondary,
+                color = AppColors.textSecondary,
             )
             Text(
                 "Total: ${SizeDisplay.format(totalBytes)}",
-                color = FluentTheme.colors.text.text.secondary,
+                color = AppColors.textSecondary,
             )
             Text(
                 "${SizeDisplay.formatCount(totalFiles)} files, ${SizeDisplay.formatCount(totalDirectories)} dirs",
-                color = FluentTheme.colors.text.text.secondary,
+                color = AppColors.textSecondary,
             )
             if (scanDurationMillis > 0) {
                 Text(
                     "Scanned in ${SizeDisplay.formatDuration(scanDurationMillis)}",
-                    color = FluentTheme.colors.text.text.secondary,
+                    color = AppColors.textSecondary,
                 )
             }
         }
@@ -167,19 +175,19 @@ fun BrowsingScreen(
                 "Name",
                 modifier = Modifier.weight(1f),
                 fontWeight = FontWeight.Bold,
-                color = FluentTheme.colors.text.text.secondary,
+                color = AppColors.textSecondary,
             )
             Text(
                 "Size",
                 modifier = Modifier.width(80.dp),
                 fontWeight = FontWeight.Bold,
-                color = FluentTheme.colors.text.text.secondary,
+                color = AppColors.textSecondary,
             )
             Text(
                 "%",
                 modifier = Modifier.width(60.dp),
                 fontWeight = FontWeight.Bold,
-                color = FluentTheme.colors.text.text.secondary,
+                color = AppColors.textSecondary,
             )
             Spacer(Modifier.width(140.dp)) // buttons space
         }
@@ -197,6 +205,7 @@ fun BrowsingScreen(
                         onOpen = { onOpen(node) },
                         onDelete = { deleteTarget = node },
                         parentTotalSize = currentNode.totalSize,
+                        isDeleting = node.absolutePath in deletingPaths,
                     )
                 }
 
@@ -205,7 +214,7 @@ fun BrowsingScreen(
                         Text(
                             "Empty directory",
                             modifier = Modifier.padding(32.dp).fillMaxWidth(),
-                            color = FluentTheme.colors.text.text.secondary,
+                            color = AppColors.textSecondary,
                         )
                     }
                 }

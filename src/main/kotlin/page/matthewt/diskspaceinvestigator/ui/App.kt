@@ -11,6 +11,7 @@ import androidx.compose.ui.window.Dialog
 import com.konyaco.fluent.component.Text
 import com.konyaco.fluent.component.Button
 import com.konyaco.fluent.FluentTheme
+import page.matthewt.diskspaceinvestigator.ui.theme.AppColors
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.ui.Alignment
@@ -78,6 +79,8 @@ fun App(viewModel: AppViewModel) {
                     loadedFromSession = currentState.loadedFromSession,
                     sessionSaved = currentState.sessionSaved,
                     saving = currentState.saving,
+                    saveProgress = currentState.saveProgress,
+                    deletingPaths = currentState.deletingPaths,
                 )
             }
 
@@ -128,7 +131,7 @@ private fun AuthDialog(
             modifier = Modifier
                 .width(400.dp)
                 .clip(RoundedCornerShape(8.dp))
-                .background(FluentTheme.colors.background.solid.secondary)
+                .background(AppColors.backgroundSecondary)
                 .padding(24.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
@@ -136,10 +139,11 @@ private fun AuthDialog(
                 if (prompt.type == page.matthewt.diskspaceinvestigator.viewmodel.AuthPromptType.PASSPHRASE)
                     "SSH Key Passphrase" else "SSH Password",
                 style = FluentTheme.typography.subtitle,
+                color = AppColors.textPrimary,
                 fontWeight = FontWeight.Bold,
             )
 
-            Text(prompt.message, color = FluentTheme.colors.text.text.secondary)
+            Text(prompt.message, color = AppColors.textSecondary)
 
             OutlinedTextField(
                 value = input,
@@ -173,19 +177,19 @@ private fun LoadingSessionScreen(fileName: String, scanDurationMillis: Long = 0)
         Text(
             "Loading session...",
             style = FluentTheme.typography.subtitle,
-            color = FluentTheme.colors.text.text.primary,
+            color = AppColors.textPrimary,
             fontWeight = FontWeight.Bold,
         )
         Spacer(Modifier.height(8.dp))
         Text(
             fileName,
-            color = FluentTheme.colors.text.text.secondary,
+            color = AppColors.textSecondary,
         )
         if (scanDurationMillis > 0) {
             Spacer(Modifier.height(4.dp))
             Text(
                 "Original scan took ${page.matthewt.diskspaceinvestigator.ui.components.SizeDisplay.formatDuration(scanDurationMillis)}",
-                color = FluentTheme.colors.text.text.secondary,
+                color = AppColors.textSecondary,
             )
         }
     }
@@ -202,7 +206,7 @@ private fun SuccessBanner(
             .fillMaxWidth()
             .padding(16.dp)
             .clip(RoundedCornerShape(8.dp))
-            .background(androidx.compose.ui.graphics.Color(0xFF1B5E20))
+            .background(AppColors.success)
             .padding(12.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(12.dp),
@@ -210,7 +214,7 @@ private fun SuccessBanner(
         Text(
             message,
             modifier = Modifier.weight(1f),
-            color = androidx.compose.ui.graphics.Color.White,
+            color = AppColors.textOnStatus,
         )
         Button(onClick = onDismiss) {
             Text("OK")
@@ -229,7 +233,7 @@ private fun ErrorBanner(
             .fillMaxWidth()
             .padding(16.dp)
             .clip(RoundedCornerShape(8.dp))
-            .background(FluentTheme.colors.background.solid.secondary)
+            .background(AppColors.backgroundSecondary)
             .padding(12.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(12.dp),
@@ -237,7 +241,7 @@ private fun ErrorBanner(
         Text(
             message,
             modifier = Modifier.weight(1f),
-            color = FluentTheme.colors.text.text.primary,
+            color = AppColors.textPrimary,
         )
         Button(onClick = onDismiss) {
             Text("Dismiss")

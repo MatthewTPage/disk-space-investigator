@@ -12,6 +12,7 @@ import com.konyaco.fluent.component.Button
 import com.konyaco.fluent.component.ProgressRing
 import com.konyaco.fluent.component.Text
 import com.konyaco.fluent.FluentTheme
+import page.matthewt.diskspaceinvestigator.ui.theme.AppColors
 import page.matthewt.diskspaceinvestigator.model.ScanProgress
 import page.matthewt.diskspaceinvestigator.model.ScanSource
 import page.matthewt.diskspaceinvestigator.ui.components.SizeDisplay
@@ -42,6 +43,7 @@ fun ScanningScreen(
         Text(
             "Scanning ${source.displayName}",
             style = FluentTheme.typography.subtitle,
+            color = AppColors.textPrimary,
             fontWeight = FontWeight.Bold,
         )
 
@@ -54,7 +56,7 @@ fun ScanningScreen(
         ) {
             Text(
                 "Phase: ${progress.phase.name.lowercase().replaceFirstChar { it.uppercase() }}",
-                color = FluentTheme.colors.text.text.secondary,
+                color = AppColors.textSecondary,
             )
 
             Row(
@@ -72,11 +74,11 @@ fun ScanningScreen(
                         .fillMaxWidth()
                         .heightIn(min = 60.dp, max = 60.dp)
                         .padding(horizontal = 32.dp),
-                    contentAlignment = Alignment.TopCenter,
+                    contentAlignment = Alignment.TopStart,
                 ) {
                     Text(
                         progress.currentPath,
-                        color = FluentTheme.colors.text.text.secondary,
+                        color = AppColors.textSecondary,
                         maxLines = 3,
                         overflow = TextOverflow.Ellipsis,
                     )
@@ -101,10 +103,11 @@ private fun StatItem(label: String, value: String) {
             value,
             fontWeight = FontWeight.Bold,
             style = FluentTheme.typography.bodyStrong,
+            color = AppColors.textPrimary,
         )
         Text(
             label,
-            color = FluentTheme.colors.text.text.secondary,
+            color = AppColors.textSecondary,
         )
     }
 }

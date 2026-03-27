@@ -12,6 +12,7 @@ import androidx.compose.ui.unit.dp
 import com.konyaco.fluent.component.Button
 import com.konyaco.fluent.component.Text
 import com.konyaco.fluent.FluentTheme
+import page.matthewt.diskspaceinvestigator.ui.theme.AppColors
 import page.matthewt.diskspaceinvestigator.model.FileNode
 
 @Composable
@@ -24,30 +25,31 @@ fun DeleteConfirmDialog(
         modifier = Modifier
             .width(400.dp)
             .clip(RoundedCornerShape(8.dp))
-            .background(FluentTheme.colors.background.solid.secondary)
+            .background(AppColors.backgroundSecondary)
             .padding(24.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         Text(
             "Permanently Delete",
             style = FluentTheme.typography.subtitle,
+            color = AppColors.textPrimary,
             fontWeight = FontWeight.Bold,
         )
 
         Text(
             "This will permanently delete and cannot be undone:",
-            color = FluentTheme.colors.text.text.secondary,
+            color = AppColors.textSecondary,
         )
 
         Column(
             modifier = Modifier.padding(start = 8.dp),
             verticalArrangement = Arrangement.spacedBy(4.dp),
         ) {
-            Text("Name: ${node.name}", fontWeight = FontWeight.SemiBold)
-            Text("Size: ${SizeDisplay.format(node.totalSize)}")
+            Text("Name: ${node.name}", fontWeight = FontWeight.SemiBold, color = AppColors.textPrimary)
+            Text("Size: ${SizeDisplay.format(node.totalSize)}", color = AppColors.textPrimary)
             if (node.isDirectory) {
-                Text("Files: ${SizeDisplay.formatCount(node.fileCount)}")
-                Text("Directories: ${SizeDisplay.formatCount(node.directoryCount)}")
+                Text("Files: ${SizeDisplay.formatCount(node.fileCount)}", color = AppColors.textPrimary)
+                Text("Directories: ${SizeDisplay.formatCount(node.directoryCount)}", color = AppColors.textPrimary)
             }
         }
 

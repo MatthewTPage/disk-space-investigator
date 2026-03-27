@@ -35,6 +35,8 @@ sealed class AppState {
         val loadedFromSession: Boolean = false,
         val sessionSaved: Boolean = false,
         val saving: Boolean = false,
+        val saveProgress: String? = null,
+        val deletingPaths: Set<String> = emptySet(),
     ) : AppState()
 }
 

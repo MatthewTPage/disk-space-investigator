@@ -45,7 +45,7 @@ class SessionManager {
             ?: emptyList()
     }
 
-    fun saveSession(session: Session): File {
+    fun saveSession(session: Session, onProgress: ((String) -> Unit)? = null): File {
         val dateFormat = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US)
         val timestamp = dateFormat.format(Date(session.timestampMillis))
         val safeName = session.source.displayName
@@ -53,9 +53,9 @@ class SessionManager {
             .take(50)
         val fileName = "${safeName}_$timestamp"
         val file = File(sessionsDir, "$fileName.dsi")
-        SessionStore.save(session, file)
+        SessionStore.save(session, file, onProgress)
 
-        // Write metadata sidecar with the real source path and total size
+        onProgress?.invoke("Saving metadata...")
         val metaFile = File(sessionsDir, "$fileName.meta")
         metaFile.writeText("${session.source.displayName}\n${session.totalBytes}\n${session.scanDurationMillis}")
 

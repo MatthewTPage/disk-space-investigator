@@ -13,6 +13,7 @@ import androidx.compose.ui.unit.dp
 import com.konyaco.fluent.component.Button
 import com.konyaco.fluent.component.Text
 import com.konyaco.fluent.FluentTheme
+import page.matthewt.diskspaceinvestigator.ui.theme.AppColors
 import page.matthewt.diskspaceinvestigator.ssh.SshConfig
 import page.matthewt.diskspaceinvestigator.ssh.SshHostEntry
 
@@ -33,13 +34,14 @@ fun SshConnectDialog(
         modifier = Modifier
             .width(450.dp)
             .clip(RoundedCornerShape(8.dp))
-            .background(FluentTheme.colors.background.solid.secondary)
+            .background(AppColors.backgroundSecondary)
             .padding(24.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
         Text(
             "Connect via SSH",
             style = FluentTheme.typography.subtitle,
+            color = AppColors.textPrimary,
             fontWeight = FontWeight.Bold,
         )
 
@@ -47,7 +49,7 @@ fun SshConnectDialog(
         if (sshHosts.isNotEmpty()) {
             Text(
                 "SSH Config Hosts:",
-                color = FluentTheme.colors.text.text.secondary,
+                color = AppColors.textSecondary,
             )
             Row(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),

@@ -14,6 +14,7 @@ import androidx.compose.ui.window.Dialog
 import com.konyaco.fluent.component.Button
 import com.konyaco.fluent.component.Text
 import com.konyaco.fluent.FluentTheme
+import page.matthewt.diskspaceinvestigator.ui.theme.AppColors
 import page.matthewt.diskspaceinvestigator.session.SessionInfo
 import page.matthewt.diskspaceinvestigator.ui.components.SessionListItem
 import page.matthewt.diskspaceinvestigator.ui.components.SshConnectDialog
@@ -51,11 +52,11 @@ fun StartScreen(
                     "Disk Space Investigator",
                     style = FluentTheme.typography.title,
                     fontWeight = FontWeight.Bold,
-                    color = FluentTheme.colors.text.text.primary,
+                    color = AppColors.textPrimary,
                 )
                 Text(
                     "Analyze disk space usage on local or remote directories",
-                    color = FluentTheme.colors.text.text.secondary,
+                    color = AppColors.textSecondary,
                 )
             }
         }
@@ -64,7 +65,7 @@ fun StartScreen(
         if (error != null) {
             Text(
                 error,
-                color = FluentTheme.colors.stroke.control.onAccentDefault,
+                color = AppColors.error,
             )
         }
 
@@ -95,7 +96,7 @@ fun StartScreen(
             Text(
                 "Previous Sessions",
                 fontWeight = FontWeight.SemiBold,
-                color = FluentTheme.colors.text.text.primary,
+                color = AppColors.textPrimary,
                 modifier = Modifier.padding(top = 8.dp),
             )
 
@@ -115,7 +116,7 @@ fun StartScreen(
             Spacer(Modifier.weight(1f))
             Text(
                 "No previous sessions",
-                color = FluentTheme.colors.text.text.secondary,
+                color = AppColors.textSecondary,
                 modifier = Modifier.align(Alignment.CenterHorizontally),
             )
             Spacer(Modifier.weight(1f))

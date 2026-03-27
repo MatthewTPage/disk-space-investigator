@@ -7,7 +7,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.konyaco.fluent.component.Button
 import com.konyaco.fluent.component.Text
-import com.konyaco.fluent.FluentTheme
+import page.matthewt.diskspaceinvestigator.ui.theme.AppColors
 import page.matthewt.diskspaceinvestigator.session.SessionInfo
 import java.text.SimpleDateFormat
 import java.util.*
@@ -31,7 +31,7 @@ fun SessionListItem(
         Column(modifier = Modifier.weight(1f)) {
             Text(
                 session.displayName,
-                color = FluentTheme.colors.text.text.primary,
+                color = AppColors.textPrimary,
             )
             val scannedPart = if (session.scannedSizeBytes > 0) {
                 "  •  Scanned: ${SizeDisplay.format(session.scannedSizeBytes)}"
@@ -41,7 +41,7 @@ fun SessionListItem(
             } else ""
             Text(
                 "$dateStr  •  File: ${SizeDisplay.format(session.fileSizeBytes)}$scannedPart$durationPart",
-                color = FluentTheme.colors.text.text.secondary,
+                color = AppColors.textSecondary,
             )
         }
 

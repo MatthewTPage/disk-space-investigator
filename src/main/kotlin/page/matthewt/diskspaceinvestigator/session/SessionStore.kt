@@ -18,12 +18,22 @@ object SessionStore {
         ignoreUnknownKeys = true
     }
 
-    fun save(session: Session, file: File) {
+    fun save(session: Session, file: File, onProgress: ((String) -> Unit)? = null) {
         file.parentFile?.mkdirs()
+        onProgress?.invoke("Serializing tree data...")
+        val bytes = cbor.encodeToByteArray(session)
+        onProgress?.invoke("Compressing & writing to disk... (0%)")
         FileOutputStream(file).use { fos ->
             GZIPOutputStream(fos).use { gzip ->
-                val bytes = cbor.encodeToByteArray(session)
-                gzip.write(bytes)
+                val chunkSize = 1024 * 1024 // 1MB chunks
+                var written = 0
+                while (written < bytes.size) {
+                    val end = minOf(written + chunkSize, bytes.size)
+                    gzip.write(bytes, written, end - written)
+                    written = end
+                    val pct = (written * 100L / bytes.size).toInt()
+                    onProgress?.invoke("Compressing & writing to disk... ($pct%)")
+                }
             }
         }
     }

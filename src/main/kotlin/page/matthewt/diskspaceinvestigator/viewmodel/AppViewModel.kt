@@ -193,6 +193,10 @@ class AppViewModel(
         val currentState = _state.value
         if (currentState !is AppState.Browsing) return
 
+        _state.value = currentState.copy(
+            deletingPaths = currentState.deletingPaths + node.absolutePath,
+        )
+
         scope.launch {
             try {
                 val deleter: FileDeleter = when (currentState.source) {
@@ -210,13 +214,23 @@ class AppViewModel(
                 node.parent?.removeChild(node)
 
                 // Refresh state
-                _state.value = currentState.copy(
-                    totalBytes = currentState.totalBytes - bytesFreed,
-                    totalFiles = currentState.totalFiles - node.fileCount,
-                    totalDirectories = currentState.totalDirectories - node.directoryCount,
-                )
+                val latestState = _state.value
+                if (latestState is AppState.Browsing) {
+                    _state.value = latestState.copy(
+                        totalBytes = latestState.totalBytes - bytesFreed,
+                        totalFiles = latestState.totalFiles - node.fileCount,
+                        totalDirectories = latestState.totalDirectories - node.directoryCount,
+                        deletingPaths = latestState.deletingPaths - node.absolutePath,
+                    )
+                }
             } catch (e: Exception) {
                 _error.value = "Delete failed: ${e.message}"
+                val latestState = _state.value
+                if (latestState is AppState.Browsing) {
+                    _state.value = latestState.copy(
+                        deletingPaths = latestState.deletingPaths - node.absolutePath,
+                    )
+                }
             }
         }
     }
@@ -237,7 +251,7 @@ class AppViewModel(
         if (currentState !is AppState.Browsing) return
         if (currentState.saving || currentState.sessionSaved) return
 
-        _state.value = currentState.copy(saving = true)
+        _state.value = currentState.copy(saving = true, saveProgress = "Preparing...")
 
         scope.launch {
             try {
@@ -254,7 +268,12 @@ class AppViewModel(
                 )
 
                 val file = withContext(Dispatchers.IO) {
-                    sessionManager.saveSession(session)
+                    sessionManager.saveSession(session) { progress ->
+                        val s = _state.value
+                        if (s is AppState.Browsing) {
+                            _state.value = s.copy(saveProgress = progress)
+                        }
+                    }
                 }
                 val sizeStr = page.matthewt.diskspaceinvestigator.ui.components.SizeDisplay.format(file.length())
                 _saveMessage.value = "Saved to ${file.absolutePath} ($sizeStr)"

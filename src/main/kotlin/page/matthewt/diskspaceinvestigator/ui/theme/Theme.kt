@@ -20,7 +20,7 @@ fun AppTheme(content: @Composable () -> Unit) {
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(FluentTheme.colors.background.solid.base)
+                    .background(AppColors.backgroundBase)
             ) {
                 content()
             }

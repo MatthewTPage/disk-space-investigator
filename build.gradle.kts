@@ -92,6 +92,6 @@ compose.desktop {
             }
         }
 
-        jvmArgs("-Xmx4g")
+        jvmArgs("-Xmx4g", "-Dskiko.renderApi=SOFTWARE")
     }
 }
